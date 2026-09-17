@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guilt Trip Blocker</title>
+  <style>
+    body {
+      width: 280px;
+      font-family: 'Segoe UI', sans-serif;
+      background: #1e1e2f;
+      color: white;
+      padding: 16px;
+      margin: 0;
+    }
+    h2 {
+      font-size: 16px;
+      margin: 0 0 12px 0;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+    label {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .time-inputs {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    input[type="number"] {
+      width: 40px;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #2a2a3d;
+      color: white;
+    }
+    select {
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #2a2a3d;
+      color: white;
+    }
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #ffffff20;
+      border: 1px solid #ffffff50;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    button:hover {
+      background: #ffffff35;
+    }
+    .streak-box {
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .status {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 10px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <h2>🚫 Guilt Trip Blocker</h2>
+
+  <div class="streak-box" id="streakDisplay">Loading streak...</div>
+
+  <div class="toggle-row">
+    <label>Enabled</label>
+    <input type="checkbox" id="enabledToggle">
+  </div>
+
+  <div class="row">
+    <label>Start time</label>
+    <div class="time-inputs">
+      <input type="number" id="startHour12" min="1" max="12">
+      <select id="startAmPm">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <label>End time</label>
+    <div class="time-inputs">
+      <input type="number" id="endHour12" min="1" max="12">
+      <select id="endAmPm">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="saveBtn">Save Settings</button>
+  <div class="status" id="statusMsg"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

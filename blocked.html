@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guilt Trip Blocker</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1e1e2f, #3a1c71);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .emoji {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 28px;
+      max-width: 600px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .streak {
+      margin-top: 30px;
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 15px;
+      background: #ffffff20;
+      border: 1px solid #ffffff50;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ffffff35;
+    }
+  </style>
+</head>
+<body>
+  <div class="emoji" id="emoji">😤</div>
+  <h1 id="message">Loading...</h1>
+  <div class="streak" id="streak"></div>
+  <button id="backBtn">Go back to work</button>
+
+  <script src="blocked.js"></script>
+</body>
+</html>
