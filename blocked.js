@@ -80,7 +80,7 @@ function notifyBlockedVisit() {
 }
 
 document.getElementById("backBtn").addEventListener("click", () => {
-  window.location.href = "chrome://newtab";
+  window.history.back();
 });
 
 loadRandomMessage();

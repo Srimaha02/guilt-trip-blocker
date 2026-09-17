@@ -19,8 +19,22 @@ function to12Hour(hour24) {
 
 async function loadSettings() {
   const data = await chrome.storage.local.get([
-    "startHour", "endHour", "isEnabled", "streakToday", "lastBlockDate"
-  ]);
+  "startHour",
+  "endHour",
+  "isEnabled",
+  "streakToday",
+  "lastBlockDate",
+  "blockedWebsites"
+]);
+const blockedWebsites = data.blockedWebsites ?? [
+  "instagram.com",
+  "youtube.com",
+  "reddit.com"
+];
+
+document.querySelectorAll(".website-checkbox").forEach((checkbox) => {
+  checkbox.checked = blockedWebsites.includes(checkbox.value);
+});
 
   const startHour24 = data.startHour ?? 9;
   const endHour24 = data.endHour ?? 18;
@@ -47,6 +61,9 @@ async function saveSettings() {
   const endHour12 = document.getElementById("endHour12").value;
   const endAmPm = document.getElementById("endAmPm").value;
   const isEnabled = document.getElementById("enabledToggle").checked;
+  const blockedWebsites = Array.from(
+  document.querySelectorAll(".website-checkbox:checked")
+).map((checkbox) => checkbox.value);
 
   if (!startHour12 || !endHour12 || startHour12 < 1 || startHour12 > 12 || endHour12 < 1 || endHour12 > 12) {
     document.getElementById("statusMsg").textContent = "Enter valid hour (1-12) da.";
@@ -61,8 +78,12 @@ async function saveSettings() {
     return;
   }
 
-  await chrome.storage.local.set({ startHour, endHour, isEnabled });
-
+await chrome.storage.local.set({
+  startHour,
+  endHour,
+  isEnabled,
+  blockedWebsites
+});
   document.getElementById("statusMsg").textContent = "Saved ✅";
   setTimeout(() => {
     document.getElementById("statusMsg").textContent = "";

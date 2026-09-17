@@ -78,6 +78,56 @@
       margin-top: 10px;
       opacity: 0.7;
     }
+    .website-section {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.website-section h3 {
+  font-size: 14px;
+  margin: 0 0 10px 0;
+}
+
+.website-option {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.add-website {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+#customWebsite {
+  width: 120px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #2a2a3d;
+  color: white;
+}
+
+#addWebsiteBtn {
+  width: auto;
+  padding: 5px 8px;
+  font-size: 11px;
+}
+
+.custom-website {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.remove-website {
+  width: auto;
+  padding: 2px 6px;
+  font-size: 10px;
+}
   </style>
 </head>
 <body>
@@ -89,6 +139,48 @@
     <label>Enabled</label>
     <input type="checkbox" id="enabledToggle">
   </div>
+  <div class="website-section">
+
+  <h3>🚫 Blocked Websites</h3>
+
+  <label class="website-option">
+    <input type="checkbox" value="instagram.com" class="website-checkbox">
+    Instagram
+  </label>
+
+  <label class="website-option">
+    <input type="checkbox" value="youtube.com" class="website-checkbox">
+    YouTube
+  </label>
+
+  <label class="website-option">
+    <input type="checkbox" value="reddit.com" class="website-checkbox">
+    Reddit
+  </label>
+  <label>
+  <input
+    type="checkbox"
+    class="website-checkbox"
+    value="pinterest.com"
+  >
+  Pinterest
+</label>
+
+  <div class="add-website">
+    <input
+      type="text"
+      id="customWebsite"
+      placeholder="example.com"
+    >
+
+    <button type="button" id="addWebsiteBtn">
+      + Add Website
+    </button>
+  </div>
+
+  <div id="customWebsiteList"></div>
+
+</div>
 
   <div class="row">
     <label>Start time</label>

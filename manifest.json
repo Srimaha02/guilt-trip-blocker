@@ -1,19 +1,26 @@
 {
   "manifest_version": 3,
+
   "name": "Guilt Trip Blocker",
+
   "version": "1.0",
+
   "description": "Blocks distracting sites during study hours with a Tanglish guilt trip.",
+
   "permissions": [
     "storage",
     "declarativeNetRequest",
     "alarms"
   ],
+
   "host_permissions": [
     "<all_urls>"
   ],
+
   "background": {
     "service_worker": "background.js"
   },
+
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -22,15 +29,17 @@
       "128": "icon128.png"
     }
   },
+
   "declarative_net_request": {
     "rule_resources": [
       {
         "id": "ruleset_1",
-        "enabled": true,
+        "enabled": false,
         "path": "rules.json"
       }
     ]
   },
+
   "web_accessible_resources": [
     {
       "resources": ["blocked.html"],
