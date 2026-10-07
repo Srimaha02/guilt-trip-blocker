@@ -157,9 +157,16 @@ document.getElementById("closeTabBtn").addEventListener("click", () => {
   }, 150);
 });
 
-document.getElementById("studyRedirectBtn").addEventListener("click", (e) => {
-  e.preventDefault();
+document.getElementById("btnLeetCode").addEventListener("click", () => {
   window.location.href = "https://leetcode.com";
+});
+
+document.getElementById("btnNeetCode").addEventListener("click", () => {
+  window.location.href = "https://neetcode.io";
+});
+
+document.getElementById("btnGFG").addEventListener("click", () => {
+  window.location.href = "https://www.geeksforgeeks.org";
 });
 
 // Friction / Give Up Modal Logic
