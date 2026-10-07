@@ -1,26 +1,20 @@
 {
   "manifest_version": 3,
-
   "name": "Guilt Trip Blocker",
-
-  "version": "1.0",
-
-  "description": "Blocks distracting sites during study hours with a Tanglish guilt trip.",
-
+  "version": "2.0",
+  "description": "Blocks distracting sites during study hours with Savage Tanglish guilt trips, Pomodoro lock-in, and friction bypass.",
   "permissions": [
     "storage",
     "declarativeNetRequest",
-    "alarms"
+    "alarms",
+    "notifications"
   ],
-
   "host_permissions": [
     "<all_urls>"
   ],
-
   "background": {
     "service_worker": "background.js"
   },
-
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -29,17 +23,11 @@
       "128": "icon128.png"
     }
   },
-
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "ruleset_1",
-        "enabled": false,
-        "path": "rules.json"
-      }
-    ]
+  "icons": {
+    "16": "icon128.png",
+    "48": "icon128.png",
+    "128": "icon128.png"
   },
-
   "web_accessible_resources": [
     {
       "resources": ["blocked.html"],

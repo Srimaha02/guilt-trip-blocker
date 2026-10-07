@@ -2,210 +2,601 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guilt Trip Blocker</title>
   <style>
-    body {
-      width: 280px;
-      font-family: 'Segoe UI', sans-serif;
-      background: #1e1e2f;
-      color: white;
-      padding: 16px;
+    :root {
+      --bg: #0f0b1a;
+      --card-bg: rgba(26, 20, 48, 0.7);
+      --card-border: rgba(139, 92, 246, 0.2);
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: #1c1533;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    h2 {
-      font-size: 16px;
-      margin: 0 0 12px 0;
+
+    body {
+      width: 360px;
+      min-height: 520px;
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      overflow-x: hidden;
     }
-    .row {
+
+    /* Header */
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       margin-bottom: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
       gap: 8px;
     }
-    label {
-      font-size: 13px;
-      white-space: nowrap;
+
+    .brand-icon {
+      font-size: 20px;
+      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
     }
-    .time-inputs {
-      display: flex;
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      background: linear-gradient(135deg, #fff, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Master Switch */
+    .switch-wrap {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 22px;
+    }
+
+    .switch-wrap input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #332b4d;
+      transition: .3s;
+      border-radius: 22px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+
+    /* Nav Tabs */
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 4px;
-      align-items: center;
-    }
-    input[type="number"] {
-      width: 40px;
+      background: rgba(255, 255, 255, 0.04);
       padding: 4px;
-      border-radius: 4px;
-      border: 1px solid #444;
-      background: #2a2a3d;
-      color: white;
+      border-radius: 10px;
+      margin-bottom: 14px;
     }
-    select {
-      padding: 4px;
-      border-radius: 4px;
-      border: 1px solid #444;
-      background: #2a2a3d;
-      color: white;
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 8px 4px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
     }
-    .toggle-row {
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Tab Content */
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
     }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #ffffff20;
-      border: 1px solid #ffffff50;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    button:hover {
-      background: #ffffff35;
-    }
-    .streak-box {
+
+    /* Pomodoro / Lock-in Elements */
+    .lockin-hero {
       text-align: center;
-      margin-bottom: 16px;
-      font-size: 14px;
-      opacity: 0.9;
+      padding: 12px 6px;
     }
-    .status {
-      text-align: center;
+
+    .timer-display {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: #fff;
+      margin: 8px 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-status {
       font-size: 12px;
-      margin-top: 10px;
+      font-weight: 600;
+      color: var(--emerald);
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(16, 185, 129, 0.15);
+      border-radius: 99px;
+      margin-bottom: 14px;
+    }
+
+    .timer-status.active {
+      color: var(--rose);
+      background: rgba(244, 63, 94, 0.15);
+    }
+
+    .quick-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .preset-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 8px 4px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-btn:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #6366f1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-danger {
+      background: var(--rose);
+      color: white;
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Sites List */
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 140px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .site-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 7px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+    }
+
+    .site-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: none;
+      color: var(--rose);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 2px 6px;
       opacity: 0.7;
     }
-    .website-section {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
+    .btn-icon:hover {
+      opacity: 1;
+    }
 
-.website-section h3 {
-  font-size: 14px;
-  margin: 0 0 10px 0;
-}
+    /* Add Row */
+    .input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
 
-.website-option {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 13px;
-}
+    .input-text {
+      flex: 1;
+      background: var(--input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 7px;
+      color: white;
+      padding: 8px 10px;
+      font-size: 12px;
+      outline: none;
+    }
+    .input-text:focus {
+      border-color: var(--primary);
+    }
 
-.add-website {
-  display: flex;
-  gap: 5px;
-  margin-top: 10px;
-}
+    .input-select {
+      background: var(--input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 7px;
+      color: white;
+      padding: 7px 8px;
+      font-size: 12px;
+      outline: none;
+    }
 
-#customWebsite {
-  width: 120px;
-  padding: 5px;
-  border-radius: 4px;
-  border: 1px solid #444;
-  background: #2a2a3d;
-  color: white;
-}
+    /* Schedule Sessions */
+    .session-item {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
 
-#addWebsiteBtn {
-  width: auto;
-  padding: 5px 8px;
-  font-size: 11px;
-}
+    .session-picker {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
 
-.custom-website {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 6px;
-  font-size: 12px;
-}
+    .time-selector-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
 
-.remove-website {
-  width: auto;
-  padding: 2px 6px;
-  font-size: 10px;
-}
+    /* Analytics Dashboard */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+      margin-top: 2px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* Status Toast */
+    .toast {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      min-height: 16px;
+      margin-top: 8px;
+      color: var(--emerald);
+    }
   </style>
 </head>
 <body>
-  <h2>🚫 Guilt Trip Blocker</h2>
 
-  <div class="streak-box" id="streakDisplay">Loading streak...</div>
-
-  <div class="toggle-row">
-    <label>Enabled</label>
-    <input type="checkbox" id="enabledToggle">
-  </div>
-  <div class="website-section">
-
-  <h3>🚫 Blocked Websites</h3>
-
-  <label class="website-option">
-    <input type="checkbox" value="instagram.com" class="website-checkbox">
-    Instagram
-  </label>
-
-  <label class="website-option">
-    <input type="checkbox" value="youtube.com" class="website-checkbox">
-    YouTube
-  </label>
-
-  <label class="website-option">
-    <input type="checkbox" value="reddit.com" class="website-checkbox">
-    Reddit
-  </label>
-  <label>
-  <input
-    type="checkbox"
-    class="website-checkbox"
-    value="pinterest.com"
-  >
-  Pinterest
-</label>
-
-  <div class="add-website">
-    <input
-      type="text"
-      id="customWebsite"
-      placeholder="example.com"
-    >
-
-    <button type="button" id="addWebsiteBtn">
-      + Add Website
-    </button>
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <span class="brand-icon">🚫</span>
+      <span class="brand-title">Guilt Trip Blocker</span>
+    </div>
+    <label class="switch-wrap" title="Enable / Disable Blocker">
+      <input type="checkbox" id="masterToggle" checked>
+      <span class="slider"></span>
+    </label>
   </div>
 
-  <div id="customWebsiteList"></div>
+  <!-- Tabs Navigation -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-tab="tab-lockin">⏱️ Lock In</button>
+    <button class="tab-btn" data-tab="tab-schedule">🛡️ Rules</button>
+    <button class="tab-btn" data-tab="tab-analytics">📊 Stats</button>
+    <button class="tab-btn" data-tab="tab-roasts">🎭 Roasts</button>
+  </div>
 
-</div>
+  <!-- TAB 1: LOCK-IN / POMODORO -->
+  <div class="tab-pane active" id="tab-lockin">
+    <div class="card lockin-hero">
+      <span class="timer-status" id="lockInStatus">Ready to Focus</span>
+      <div class="timer-display" id="timerClock">25:00</div>
+      
+      <div class="quick-preset-grid" id="presetButtons">
+        <button class="preset-btn" data-mins="25">25 Mins</button>
+        <button class="preset-btn" data-mins="50">50 Mins</button>
+        <button class="preset-btn" data-mins="90">90 Mins</button>
+      </div>
 
-  <div class="row">
-    <label>Start time</label>
-    <div class="time-inputs">
-      <input type="number" id="startHour12" min="1" max="12">
-      <select id="startAmPm">
-        <option value="AM">AM</option>
-        <option value="PM">PM</option>
-      </select>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-primary" id="toggleLockInBtn">🔥 Start Lock-In</button>
+      </div>
+    </div>
+
+    <!-- Bypass alert if active -->
+    <div class="card" id="bypassAlertCard" style="display: none; border-color: rgba(16, 185, 129, 0.3);">
+      <div style="font-size: 12px; color: var(--emerald); display: flex; justify-content: space-between; align-items: center;">
+        <span>🏃 Walk of Shame Pass Active: <strong id="bypassRemaining">5m</strong> left</span>
+        <button class="btn-icon" id="cancelBypassEarlyBtn" style="color: var(--rose);">End Now</button>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <label>End time</label>
-    <div class="time-inputs">
-      <input type="number" id="endHour12" min="1" max="12">
-      <select id="endAmPm">
-        <option value="AM">AM</option>
-        <option value="PM">PM</option>
-      </select>
+  <!-- TAB 2: SCHEDULE & BLOCKED SITES -->
+  <div class="tab-pane" id="tab-schedule">
+    <!-- Blocked Websites -->
+    <div class="card">
+      <div class="card-title">
+        <span>Blocked Websites</span>
+        <span id="siteCountBadge" style="font-size: 10px; color: var(--primary);">4 sites</span>
+      </div>
+      <div class="checkbox-list" id="websitesContainer"></div>
+
+      <div class="input-row">
+        <input type="text" id="newSiteInput" class="input-text" placeholder="e.g. twitter.com">
+        <button class="btn btn-outline" id="addSiteBtn" style="width: auto; padding: 6px 12px;">+ Add</button>
+      </div>
+    </div>
+
+    <!-- Study Hours Sessions -->
+    <div class="card">
+      <div class="card-title">
+        <span>Daily Study Sessions</span>
+      </div>
+      <div id="sessionsContainer"></div>
+
+      <div class="session-picker" id="newSessionBox">
+        <div class="time-selector-row">
+          <span>Start:</span>
+          <select id="startH" class="input-select"></select>
+          <span>:</span>
+          <select id="startM" class="input-select">
+            <option value="0">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+          </select>
+          <select id="startAP" class="input-select">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+
+        <div class="time-selector-row">
+          <span>End:</span>
+          <select id="endH" class="input-select"></select>
+          <span>:</span>
+          <select id="endM" class="input-select">
+            <option value="0">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+          </select>
+          <select id="endAP" class="input-select">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+
+        <button class="btn btn-outline" id="saveSessionBtn" style="margin-top: 6px;">
+          + Add Time Block
+        </button>
+      </div>
     </div>
   </div>
 
-  <button id="saveBtn">Save Settings</button>
-  <div class="status" id="statusMsg"></div>
+  <!-- TAB 3: ANALYTICS -->
+  <div class="tab-pane" id="tab-analytics">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Today Blocked</div>
+        <div class="stat-value" id="statsTodayBlocked">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Time Saved</div>
+        <div class="stat-value" id="statsTimeSaved">0m</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Day Streak</div>
+        <div class="stat-value" id="statsStreak">1 🔥</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">All-Time Stops</div>
+        <div class="stat-value" id="statsAllTime">0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Top Distraction Traps</div>
+      <div class="breakdown-list" id="siteBreakdownList">
+        <div style="font-size: 11px; color: var(--text-muted); text-align: center; padding: 10px;">
+          No distractions recorded yet. Stay focused!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: ROAST LAB -->
+  <div class="tab-pane" id="tab-roasts">
+    <div class="card">
+      <div class="card-title">Roast Level</div>
+      <select id="roastLevelSelect" class="input-select" style="width: 100%; margin-bottom: 12px;">
+        <option value="savage">⚡ Tanglish Savage (Default)</option>
+        <option value="hardcore">🪓 Hardcore Brutal (No Mercy)</option>
+        <option value="gentle">🌱 Gentle / Encouraging</option>
+      </select>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
+        <span style="font-size: 12px;">Play Audio Alert on Block</span>
+        <label class="switch-wrap" style="transform: scale(0.85);">
+          <input type="checkbox" id="soundToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Custom Roasts / Quotes</div>
+      <div class="input-row">
+        <input type="text" id="newRoastInput" class="input-text" placeholder="Add your own roast quote...">
+        <button class="btn btn-outline" id="addRoastBtn" style="width: auto; padding: 6px 12px;">+ Add</button>
+      </div>
+      <div id="customRoastsList" style="margin-top: 10px; max-height: 100px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastMsg"></div>
 
   <script src="popup.js"></script>
 </body>
