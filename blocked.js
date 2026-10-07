@@ -40,9 +40,20 @@ const PENALTY_SENTENCES = [
   "I have zero discipline right now and I take full responsibility for wasting my time."
 ];
 
-// Determine blocked site from query parameter
+// Determine blocked site from query parameter or document.referrer
 const urlParams = new URLSearchParams(window.location.search);
-const blockedSite = urlParams.get("site") || "Distraction";
+let blockedSite = urlParams.get("site");
+
+if (!blockedSite && document.referrer) {
+  try {
+    const refHost = new URL(document.referrer).hostname.replace(/^www\./, "");
+    if (refHost) blockedSite = refHost;
+  } catch (e) {}
+}
+
+if (!blockedSite) {
+  blockedSite = "Distraction";
+}
 
 // Audio Alert using Web Audio API (Synthesizer boing / alert)
 function playBlockSound() {
@@ -144,6 +155,11 @@ document.getElementById("closeTabBtn").addEventListener("click", () => {
   setTimeout(() => {
     window.location.href = "https://www.google.com";
   }, 150);
+});
+
+document.getElementById("studyRedirectBtn").addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = "https://leetcode.com";
 });
 
 // Friction / Give Up Modal Logic

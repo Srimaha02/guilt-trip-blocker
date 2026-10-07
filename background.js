@@ -149,6 +149,11 @@ async function checkAndSyncBlocking() {
   // Update Dynamic Rules
   await applyDnrRules(blockedWebsites, shouldBlock);
 
+  // If blocking is active, redirect any tabs that are currently already open
+  if (shouldBlock) {
+    await redirectActiveBlockedTabs(blockedWebsites);
+  }
+
   // Update Extension Icon Badge
   updateExtensionBadge({
     isBypassed,
@@ -157,6 +162,29 @@ async function checkAndSyncBlocking() {
     lockInEndsAt: lockInMode.endsAt,
     shouldBlock
   });
+}
+
+// Redirect any open tabs that match blocked websites
+async function redirectActiveBlockedTabs(blockedWebsites) {
+  if (!chrome.tabs || !blockedWebsites || blockedWebsites.length === 0) return;
+  try {
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+      if (!tab.url) continue;
+      const lowerUrl = tab.url.toLowerCase();
+      const isBlocked = blockedWebsites.some((site) => {
+        const clean = site.toLowerCase().trim();
+        return lowerUrl.includes(clean);
+      });
+      if (isBlocked && !lowerUrl.startsWith("chrome-extension://")) {
+        chrome.tabs.update(tab.id, {
+          url: chrome.runtime.getURL("blocked.html")
+        });
+      }
+    }
+  } catch (e) {
+    console.warn("Tab redirect error:", e);
+  }
 }
 
 // Apply or remove DeclarativeNetRequest dynamic rules
@@ -183,7 +211,7 @@ async function applyDnrRules(blockedWebsites, shouldBlock) {
         action: {
           type: "redirect",
           redirect: {
-            extensionPath: `/blocked.html?site=${encodeURIComponent(cleanSite)}`
+            extensionPath: "/blocked.html"
           }
         },
         condition: {
