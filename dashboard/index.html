@@ -3,213 +3,354 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guilt Trip Blocker — Focus Command Center</title>
+  <title>🎬 Guilt Trip Blocker — Interrogation Room</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090612;
-      --surface: #130e24;
-      --surface-2: #1c1535;
-      --border: rgba(139, 92, 246, 0.24);
-      --primary: #8b5cf6;
-      --indigo: #6366f1;
-      --emerald: #10b981;
-      --rose: #f43f5e;
-      --amber: #f59e0b;
+      --bg: #050508;
+      --panel: rgba(18, 16, 26, 0.85);
+      --panel-border: rgba(255, 255, 255, 0.09);
+      --crimson: #ff2a5f;
+      --gold: #fbbf24;
+      --emerald: #00e599;
+      --cyan: #38bdf8;
       --text: #f8fafc;
-      --muted: #94a3b8;
+      --muted: #8b92a5;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 28px 20px; }
-    .container { max-width: 1120px; margin: 0 auto; }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Space Grotesk', sans-serif; }
+
+    body {
+      background:
+        radial-gradient(circle at 50% -10%, rgba(255, 42, 95, 0.22), transparent 55%),
+        radial-gradient(circle at 85% 80%, rgba(251, 191, 36, 0.10), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 28px 20px 60px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle cinema scanlines */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.015) 0px,
+        rgba(255, 255, 255, 0.015) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .container { max-width: 1140px; margin: 0 auto; position: relative; z-index: 1; }
+
+    /* Top Bar */
     .topbar {
       display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
       gap: 16px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px;
     }
-    .brand h1 {
-      font-size: 22px; font-weight: 800;
-      background: linear-gradient(135deg, #fff, #c4b5fd);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .reel-badge {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: linear-gradient(135deg, #ff2a5f, #991b1b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; box-shadow: 0 0 25px rgba(255, 42, 95, 0.45);
     }
-    .brand p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .brand h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+    .brand h1 span { color: var(--crimson); }
+    .brand p { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 3px; }
+
     .connect-box { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .input {
-      background: var(--surface-2); border: 1px solid var(--border); color: white;
-      padding: 8px 12px; border-radius: 8px; font-size: 13px; outline: none;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.14);
+      color: white; padding: 9px 13px; border-radius: 10px; font-size: 13px; outline: none;
+      transition: 0.2s;
     }
+    .input:focus { border-color: var(--crimson); box-shadow: 0 0 0 3px rgba(255, 42, 95, 0.15); }
+
     .btn {
-      padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
-      cursor: pointer; border: none; color: white; transition: 0.2s;
+      padding: 9px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      cursor: pointer; border: none; color: white; transition: all 0.2s; letter-spacing: 0.2px;
     }
-    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--indigo)); }
-    .btn-emerald { background: var(--emerald); }
-    .btn-rose { background: var(--rose); }
-    .btn-ghost { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); }
-    .btn:hover { filter: brightness(1.12); }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+    .btn-crimson { background: linear-gradient(135deg, #ff2a5f, #e11d48); box-shadow: 0 6px 20px rgba(255, 42, 95, 0.3); }
+    .btn-emerald { background: linear-gradient(135deg, #00e599, #059669); color: #041f15; }
+    .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: #1a1000; }
+    .btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+
     .status-pill {
-      font-size: 11px; padding: 5px 10px; border-radius: 999px; font-weight: 600;
-      background: rgba(245, 158, 11, 0.15); color: #fde68a; border: 1px solid rgba(245, 158, 11, 0.3);
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 6px 12px;
+      border-radius: 999px; font-weight: 700;
+      background: rgba(251, 191, 36, 0.12); color: var(--gold); border: 1px solid rgba(251, 191, 36, 0.3);
     }
     .status-pill.connected {
-      background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.35);
+      background: rgba(0, 229, 153, 0.12); color: var(--emerald); border-color: rgba(0, 229, 153, 0.35);
     }
 
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-    .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); }
-    .kpi-val { font-size: 30px; font-weight: 800; margin-top: 6px; }
-    .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    /* Cinematic Verdict Hero Banner */
+    .verdict-banner {
+      background: linear-gradient(90deg, rgba(255, 42, 95, 0.14), rgba(18, 16, 26, 0.9) 60%);
+      border: 1px solid rgba(255, 42, 95, 0.35);
+      border-radius: 18px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .verdict-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--crimson);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .verdict-headline { font-size: 20px; font-weight: 800; color: #fff; }
+    .verdict-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .stamp-box {
+      border: 2px solid var(--crimson);
+      color: var(--crimson);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transform: rotate(-4deg);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(255, 42, 95, 0.2);
+    }
 
-    .main-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 24px; }
-    @media (max-width: 860px) { .main-grid { grid-template-columns: 1fr; } }
+    /* KPI Row */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card {
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      padding: 20px;
+    }
+    .kpi-top { display: flex; justify-content: space-between; align-items: center; }
+    .kpi-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--muted); }
+    .kpi-val { font-size: 34px; font-weight: 800; margin: 8px 0 4px; letter-spacing: -1px; }
+    .kpi-sub { font-size: 12px; color: var(--muted); }
 
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .card-header h2 { font-size: 15px; font-weight: 700; }
+    /* Main 2-Col Grid */
+    .main-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; margin-bottom: 24px; }
+    @media (max-width: 880px) { .main-grid { grid-template-columns: 1fr; } }
 
-    .heatmap-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 5px; margin-top: 10px; }
-    .heat-cell { aspect-ratio: 1; border-radius: 4px; background: rgba(255,255,255,0.06); cursor: pointer; }
-    .heat-1 { background: rgba(139, 92, 246, 0.3); }
-    .heat-2 { background: rgba(139, 92, 246, 0.55); }
-    .heat-3 { background: rgba(139, 92, 246, 0.8); }
-    .heat-4 { background: #10b981; }
-    .heatmap-legend { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); margin-top: 12px; justify-content: flex-end; }
-    .legend-box { width: 12px; height: 12px; border-radius: 3px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .card-header h2 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 
-    .roast-list { display: flex; flex-direction: column; gap: 8px; max-height: 170px; overflow-y: auto; margin-top: 12px; }
+    /* Compact Sleek Heatmap */
+    .heatmap-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 4px; }
+    .heat-cell {
+      height: 16px; border-radius: 4px; background: rgba(255,255,255,0.05);
+      transition: transform 0.15s; cursor: pointer;
+    }
+    .heat-cell:hover { transform: scale(1.3); z-index: 2; outline: 1px solid #fff; }
+    .heat-1 { background: rgba(255, 42, 95, 0.35); }
+    .heat-2 { background: rgba(251, 191, 36, 0.55); }
+    .heat-3 { background: rgba(0, 229, 153, 0.65); }
+    .heat-4 { background: #00e599; box-shadow: 0 0 8px rgba(0, 229, 153, 0.5); }
+
+    /* Cinema Subtitle Preview Screen */
+    .cinema-screen {
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 18px 14px;
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+      background-image: radial-gradient(circle at center, rgba(255, 42, 95, 0.18), transparent 70%);
+    }
+    .cinema-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .subtitle-text {
+      color: #fde047; /* Classic Kollywood yellow cinema subtitle */
+      font-size: 15px;
+      font-weight: 700;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.95);
+      line-height: 1.4;
+    }
+
+    .roast-list { display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; margin-top: 12px; }
     .roast-item {
-      background: var(--surface-2); padding: 10px 12px; border-radius: 8px; font-size: 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+      padding: 9px 12px; border-radius: 10px; font-size: 12px;
       display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
 
-    .share-preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-    .accountability-card {
-      width: 100%; max-width: 440px; border-radius: 20px; padding: 28px;
-      background: linear-gradient(135deg, #1e123b 0%, #110b24 55%, #0a1f1c 100%);
-      border: 1px solid rgba(139, 92, 246, 0.45);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    /* Cinematic Case File Share Card */
+    .share-wrap { display: flex; justify-content: center; margin-top: 12px; }
+    .case-card {
+      width: 100%; max-width: 480px; border-radius: 20px; padding: 26px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 42, 95, 0.25), transparent 55%),
+        linear-gradient(145deg, #0f0d18, #07070c);
+      border: 1px solid rgba(255, 42, 95, 0.45);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.75);
+      position: relative;
     }
-    .ac-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-    .ac-tag { font-size: 11px; font-weight: 700; color: #c4b5fd; letter-spacing: 0.8px; text-transform: uppercase; }
-    .ac-score-box { text-align: center; margin: 12px 0 20px; }
-    .ac-score { font-size: 48px; font-weight: 900; color: #10b981; line-height: 1; }
-    .ac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
-    .ac-stat { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
-    .ac-stat span { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; }
-    .ac-stat strong { font-size: 16px; color: white; margin-top: 3px; display: block; }
+    .case-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 12px; margin-bottom: 16px; }
+    .case-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--crimson); }
+    .case-score-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .case-score { font-size: 52px; font-weight: 800; color: var(--emerald); line-height: 1; }
+    .case-verdict-pill {
+      background: rgba(0, 229, 153, 0.12); border: 1px solid rgba(0, 229, 153, 0.35);
+      color: var(--emerald); font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 8px;
+    }
+    .case-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .case-stat { background: rgba(255,255,255,0.04); padding: 10px; border-radius: 10px; text-align: center; }
+    .case-stat span { display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+    .case-stat strong { font-size: 17px; color: #fff; margin-top: 3px; display: block; }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Top Header -->
     <div class="topbar">
       <div class="brand">
-        <h1>🚫 Guilt Trip Blocker — Command Center</h1>
-        <p>Zero-Backend Companion Dashboard • Extension Sync + Focus Analytics</p>
+        <div class="reel-badge">🎬</div>
+        <div>
+          <h1>GUILT TRIP <span>BLOCKER</span></h1>
+          <p>DOPAMINE INTERROGATION ROOM • EXTENSION COMMAND CENTER</p>
+        </div>
       </div>
       <div class="connect-box">
-        <span class="status-pill" id="connStatus">Demo Preview Mode</span>
-        <input type="text" id="extIdInput" class="input" placeholder="Paste Chrome Extension ID..." style="width: 240px;" />
-        <button class="btn btn-primary" id="connectBtn">Sync Extension</button>
+        <span class="status-pill" id="connStatus">DEMO REEL MODE</span>
+        <input type="text" id="extIdInput" class="input" placeholder="Paste Chrome Extension ID..." style="width: 230px;" />
+        <button class="btn btn-crimson" id="connectBtn">Sync Extension</button>
       </div>
     </div>
 
+    <!-- Dynamic Cinematic Verdict Banner -->
+    <div class="verdict-banner">
+      <div>
+        <div class="verdict-tag">⚖️ COURTROOM VERDICT • LIVE TELEMETRY</div>
+        <div class="verdict-headline" id="verdictHeadline">"Reels algorithm-ku neenga innum surrender aagala. Mass!"</div>
+        <div class="verdict-sub" id="verdictSub">Based on your ratio of resisted impulses vs Walk of Shame bypasses.</div>
+      </div>
+      <div class="stamp-box" id="verdictStamp">DISCIPLINE: LOCKED IN</div>
+    </div>
+
+    <!-- KPI Row -->
     <div class="kpi-grid">
       <div class="card">
-        <div class="kpi-label">Impulses Blocked</div>
-        <div class="kpi-val" id="kpiBlocked" style="color: #c4b5fd;">0</div>
+        <div class="kpi-top"><span class="kpi-label">Traps Dodged</span><span>🛡️</span></div>
+        <div class="kpi-val" id="kpiBlocked" style="color: var(--cyan);">0</div>
         <div class="kpi-sub" id="kpiTodaySub">0 blocked today</div>
       </div>
       <div class="card">
-        <div class="kpi-label">Est. Time Saved</div>
-        <div class="kpi-val" id="kpiSaved" style="color: #10b981;">0h</div>
-        <div class="kpi-sub">15 mins saved per resisted rabbit-hole</div>
+        <div class="kpi-top"><span class="kpi-label">Life Saved</span><span>⏳</span></div>
+        <div class="kpi-val" id="kpiSaved" style="color: var(--emerald);">0h</div>
+        <div class="kpi-sub">15m saved per resisted impulse</div>
       </div>
       <div class="card">
-        <div class="kpi-label">Discipline Streak</div>
-        <div class="kpi-val" id="kpiStreak" style="color: #f59e0b;">1 🔥</div>
-        <div class="kpi-sub">Consecutive focused days</div>
+        <div class="kpi-top"><span class="kpi-label">Survival Streak</span><span>🔥</span></div>
+        <div class="kpi-val" id="kpiStreak" style="color: var(--gold);">1d</div>
+        <div class="kpi-sub">Days without total brain-rot</div>
       </div>
       <div class="card">
-        <div class="kpi-label">Walk of Shame Count</div>
-        <div class="kpi-val" id="kpiShame" style="color: #f43f5e;">0</div>
-        <div class="kpi-sub">Emergency bypasses used</div>
+        <div class="kpi-top"><span class="kpi-label">Walk of Shame</span><span>🤡</span></div>
+        <div class="kpi-val" id="kpiShame" style="color: var(--crimson);">0</div>
+        <div class="kpi-sub">Times you begged for 5 mins</div>
       </div>
     </div>
 
+    <!-- Main 2-Column Grid -->
     <div class="main-grid">
+      <!-- Left: Heatmap + Remote Lock-In -->
       <div class="card">
         <div class="card-header">
-          <h2>📅 90-Day Focus & Resistance Heatmap</h2>
-          <span style="font-size: 11px; color: var(--muted);">Last 90 Days</span>
+          <h2>📅 90-Day Dopamine Jail Log</h2>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);">HOVER CELLS FOR INTEL</span>
         </div>
         <div class="heatmap-grid" id="heatmapGrid"></div>
-        <div class="heatmap-legend">
-          <span>Less</span>
-          <div class="legend-box" style="background: rgba(255,255,255,0.06);"></div>
-          <div class="legend-box heat-1"></div>
-          <div class="legend-box heat-2"></div>
-          <div class="legend-box heat-3"></div>
-          <div class="legend-box heat-4"></div>
-          <span>Locked In</span>
-        </div>
 
-        <div style="margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
-          <div class="card-header" style="margin-bottom: 10px;">
-            <h2>⚡ Remote Lock-In Trigger</h2>
-            <span id="remoteLockStatus" style="font-size: 12px; color: var(--emerald);">Idle</span>
+        <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08);">
+          <div class="card-header" style="margin-bottom: 12px;">
+            <h2>🚨 Emergency Solitary Confinement (Remote Lock)</h2>
+            <span id="remoteLockStatus" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--emerald);">● STANDBY</span>
           </div>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="btn btn-primary" onclick="triggerRemoteLock(25)">🔥 Lock In 25m</button>
-            <button class="btn btn-primary" onclick="triggerRemoteLock(50)">🔥 Lock In 50m</button>
-            <button class="btn btn-primary" onclick="triggerRemoteLock(90)">🔥 Lock In 90m</button>
-            <button class="btn btn-rose" onclick="stopRemoteLock()">🛑 Stop</button>
+            <button class="btn btn-crimson" onclick="triggerRemoteLock(25)">🔒 Lock 25m</button>
+            <button class="btn btn-crimson" onclick="triggerRemoteLock(50)">🔒 Lock 50m</button>
+            <button class="btn btn-gold" onclick="triggerRemoteLock(90)">⚡ Deep Work 90m</button>
+            <button class="btn btn-ghost" onclick="stopRemoteLock()">🏳️ Abort</button>
           </div>
         </div>
       </div>
 
+      <!-- Right: Cinema Subtitle Roast Studio -->
       <div class="card">
         <div class="card-header">
-          <h2>🎭 Roast Studio (Remote Sync)</h2>
+          <h2>🎞️ Dialogue & Roast Studio</h2>
+          <button class="btn btn-ghost" id="auditionRoastBtn" style="padding: 5px 10px; font-size: 11px;">🎲 Audition Line</button>
         </div>
-        <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px;">Roast Intensity</label>
-        <select id="dashRoastLevel" class="input" style="width: 100%; margin-bottom: 14px;">
-          <option value="savage">⚡ Tanglish Savage</option>
-          <option value="hardcore">🪓 Hardcore Brutal</option>
+
+        <div class="cinema-screen">
+          <div class="cinema-tag">[ LIVE BLOCK SCREEN SUBTITLE PREVIEW ]</div>
+          <div class="subtitle-text" id="subtitlePreview">"Dei. Padikka mudiyala nu illa. Nee padikka virumbala."</div>
+        </div>
+
+        <select id="dashRoastLevel" class="input" style="width: 100%; margin-bottom: 10px;">
+          <option value="savage">⚡ Tanglish Savage (Kollywood Roast)</option>
+          <option value="hardcore">🪓 Hardcore Brutal (No Mercy)</option>
           <option value="gentle">🌱 Gentle Reminder</option>
         </select>
 
-        <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px;">Add Custom Tanglish Roast</label>
         <div style="display: flex; gap: 8px;">
-          <input type="text" id="dashNewRoast" class="input" placeholder="e.g. Reels paatha placement varadhu da..." style="flex: 1;" />
-          <button class="btn btn-ghost" id="dashAddRoastBtn">+ Add</button>
+          <input type="text" id="dashNewRoast" class="input" placeholder="Write a dialogue to roast future you..." style="flex: 1;" />
+          <button class="btn btn-crimson" id="dashAddRoastBtn">+ Add</button>
         </div>
 
         <div class="roast-list" id="dashRoastList"></div>
       </div>
     </div>
 
+    <!-- Bottom: Cinematic Case File Card -->
     <div class="card">
       <div class="card-header">
-        <h2>🪪 Public Accountability Card (Privacy-Safe for LinkedIn)</h2>
-        <button class="btn btn-emerald" id="downloadCardBtn">⬇️ Download PNG Card</button>
+        <h2>🪪 Shareable Discipline Case File (LinkedIn-Ready PNG)</h2>
+        <button class="btn btn-emerald" id="downloadCardBtn">⬇️ Export PNG Evidence</button>
       </div>
-      <p style="font-size: 12px; color: var(--muted); margin-bottom: 18px;">
-        Shares only your Focus Score, Time Saved & Streak — keeps your daily study topics and coding progress 100% private.
+      <p style="font-size: 12px; color: var(--muted);">
+        Zero study topics or private coding logs exposed — shares only your Focus Score, Time Saved & Streak.
       </p>
 
-      <div class="share-preview-wrap">
-        <div class="accountability-card">
-          <div class="ac-top">
-            <span class="ac-tag">🚫 Guilt Trip Blocker • Weekly Report</span>
-            <span style="font-size: 11px; color: #94a3b8;" id="cardDateBadge">Nov 2026</span>
+      <div class="share-wrap">
+        <div class="case-card">
+          <div class="case-header">
+            <span class="case-title">CASE #GTB-2026 // FOCUS REPORT</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);" id="cardDateBadge">NOV 2026</span>
           </div>
-          <div class="ac-score-box">
-            <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Focus Discipline Score</div>
-            <div class="ac-score" id="cardFocusScore">96%</div>
+          <div class="case-score-row">
+            <div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted);">SELF-CONTROL RATING</div>
+              <div class="case-score" id="cardFocusScore">96%</div>
+            </div>
+            <div class="case-verdict-pill" id="cardRankBadge">🏆 ALGORITHM SLAYER</div>
           </div>
-          <div class="ac-grid">
-            <div class="ac-stat"><span>Time Saved</span><strong id="cardTimeSaved">4.5 hrs</strong></div>
-            <div class="ac-stat"><span>Resisted</span><strong id="cardResisted">18x</strong></div>
-            <div class="ac-stat"><span>Streak</span><strong id="cardStreak">7 Days</strong></div>
+          <div class="case-stats">
+            <div class="case-stat"><span>TIME SAVED</span><strong id="cardTimeSaved">6.5 hrs</strong></div>
+            <div class="case-stat"><span>TRAPS DODGED</span><strong id="cardResisted">26x</strong></div>
+            <div class="case-stat"><span>STREAK</span><strong id="cardStreak">6 Days</strong></div>
           </div>
         </div>
       </div>
@@ -217,6 +358,13 @@
   </div>
 
   <script>
+    const SAMPLE_LINES = [
+      "\"Dei. Padikka mudiyala nu illa. Nee padikka virumbala.\"",
+      "\"Study video thedi vandhu, recommendation-la 17 videos later... enna da research?\"",
+      "\"Social media open panna 0.2s. Problem solve panna loading screen. Semma priorities.\"",
+      "\"Un dream list aesthetic ah irukku. Aana un actual daily progress enga da?\""
+    ];
+
     const DEMO_STATE = {
       roastLevel: "savage",
       customRoasts: [
@@ -246,23 +394,17 @@
 
     let extensionId = localStorage.getItem("gtb_ext_id") || "";
     let isConnected = false;
-
     document.getElementById("extIdInput").value = extensionId;
 
     function sendToExtension(message) {
       return new Promise((resolve) => {
-        if (!extensionId || !window.chrome?.runtime?.sendMessage) {
-          resolve(null);
-          return;
-        }
+        if (!extensionId || !window.chrome?.runtime?.sendMessage) { resolve(null); return; }
         try {
-          chrome.runtime.sendMessage(extensionId, message, (response) => {
-            if (chrome.runtime.lastError || !response) resolve(null);
-            else resolve(response);
+          chrome.runtime.sendMessage(extensionId, message, (res) => {
+            if (chrome.runtime.lastError || !res) resolve(null);
+            else resolve(res);
           });
-        } catch (e) {
-          resolve(null);
-        }
+        } catch (e) { resolve(null); }
       });
     }
 
@@ -272,11 +414,11 @@
       if (res && res.ok && res.data) {
         isConnected = true;
         currentState = res.data;
-        pill.textContent = "🟢 Connected to Extension";
+        pill.textContent = "● LIVE EXTENSION SYNCED";
         pill.classList.add("connected");
       } else {
         isConnected = false;
-        pill.textContent = "Demo Preview Mode";
+        pill.textContent = "DEMO REEL MODE";
         pill.classList.remove("connected");
       }
       renderDashboard();
@@ -286,6 +428,14 @@
       extensionId = document.getElementById("extIdInput").value.trim();
       localStorage.setItem("gtb_ext_id", extensionId);
       syncFromExtension();
+    });
+
+    document.getElementById("auditionRoastBtn").addEventListener("click", () => {
+      const pool = [
+        ...SAMPLE_LINES,
+        ...(currentState.customRoasts || []).map((r) => `"${r}"`)
+      ];
+      document.getElementById("subtitlePreview").textContent = pool[Math.floor(Math.random() * pool.length)];
     });
 
     function renderDashboard() {
@@ -299,25 +449,44 @@
       document.getElementById("kpiBlocked").textContent = totalBlocked;
       document.getElementById("kpiTodaySub").textContent = `${todayBlocked} blocked today`;
       document.getElementById("kpiSaved").textContent = `${savedHours}h`;
-      document.getElementById("kpiStreak").textContent = `${streak} 🔥`;
+      document.getElementById("kpiStreak").textContent = `${streak}d`;
       document.getElementById("kpiShame").textContent = totalBypasses;
 
-      const rawScore = totalBlocked === 0 ? 100 : Math.max(50, Math.round(((totalBlocked - totalBypasses) / totalBlocked) * 100));
+      const rawScore = totalBlocked === 0 ? 100 : Math.max(40, Math.round(((totalBlocked - totalBypasses) / totalBlocked) * 100));
       document.getElementById("cardFocusScore").textContent = `${rawScore}%`;
       document.getElementById("cardTimeSaved").textContent = `${savedHours} hrs`;
       document.getElementById("cardResisted").textContent = `${totalBlocked}x`;
       document.getElementById("cardStreak").textContent = `${streak} Days`;
-      document.getElementById("cardDateBadge").textContent = new Date().toLocaleDateString("en-IN", { month: "short", year: "numeric" });
+      document.getElementById("cardDateBadge").textContent = new Date().toLocaleDateString("en-IN", { month: "short", year: "numeric" }).toUpperCase();
+
+      // Dynamic Funny Verdict
+      const headline = document.getElementById("verdictHeadline");
+      const stamp = document.getElementById("verdictStamp");
+      const rankBadge = document.getElementById("cardRankBadge");
+
+      if (totalBypasses === 0) {
+        headline.textContent = "\"Zero Walk of Shame! Instagram algorithm unga kitta thothuduchu.\"";
+        stamp.textContent = "VERDICT: UNBREAKABLE";
+        rankBadge.textContent = "👑 IRON WILLPOWER";
+      } else if (rawScore >= 80) {
+        headline.textContent = "\"Konjam slip aanalum thirumbi vandhuta. Mass comeback!\"";
+        stamp.textContent = "VERDICT: LOCKED IN";
+        rankBadge.textContent = "🏆 ALGORITHM SLAYER";
+      } else {
+        headline.textContent = "\"Emergency pass edukradhula PhD vaangiruka pola. Konjam control pannu da!\"";
+        stamp.textContent = "VERDICT: SUSPECT";
+        rankBadge.textContent = "⚠️ DOPAMINE RISK";
+      }
 
       const lock = currentState.lockInMode || {};
       const lockStatus = document.getElementById("remoteLockStatus");
       if (lock.active && lock.endsAt > Date.now()) {
         const mins = Math.ceil((lock.endsAt - Date.now()) / 60000);
-        lockStatus.textContent = `🔥 Active (${mins}m left)`;
-        lockStatus.style.color = "#f43f5e";
+        lockStatus.textContent = `● LOCKED IN (${mins}m LEFT)`;
+        lockStatus.style.color = "#ff2a5f";
       } else {
-        lockStatus.textContent = "Idle";
-        lockStatus.style.color = "#10b981";
+        lockStatus.textContent = "● STANDBY";
+        lockStatus.style.color = "#00e599";
       }
 
       const grid = document.getElementById("heatmapGrid");
@@ -333,7 +502,7 @@
         else if (activity >= 3) cell.classList.add("heat-3");
         else if (activity >= 2) cell.classList.add("heat-2");
         else if (activity >= 1) cell.classList.add("heat-1");
-        cell.title = `${dateKey}: ${day.blocked} blocked, ${day.focusMins || 0}m focus`;
+        cell.title = `${dateKey}: Dodged ${day.blocked} traps • ${day.focusMins || 0}m locked in`;
         grid.appendChild(cell);
       }
 
@@ -343,7 +512,7 @@
       (currentState.customRoasts || []).forEach((r, idx) => {
         const row = document.createElement("div");
         row.className = "roast-item";
-        row.innerHTML = `<span>${r}</span><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;" onclick="deleteRoast(${idx})">✕</button>`;
+        row.innerHTML = `<span>"${r}"</span><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;" onclick="deleteRoast(${idx})">✕</button>`;
         list.appendChild(row);
       });
     }
@@ -351,22 +520,17 @@
     async function persistSettings(partial) {
       Object.assign(currentState, partial);
       renderDashboard();
-      if (isConnected) {
-        await sendToExtension({ type: "UPDATE_SETTINGS", payload: partial });
-      }
+      if (isConnected) await sendToExtension({ type: "UPDATE_SETTINGS", payload: partial });
     }
 
-    document.getElementById("dashRoastLevel").addEventListener("change", (e) => {
-      persistSettings({ roastLevel: e.target.value });
-    });
-
+    document.getElementById("dashRoastLevel").addEventListener("change", (e) => persistSettings({ roastLevel: e.target.value }));
     document.getElementById("dashAddRoastBtn").addEventListener("click", () => {
       const inp = document.getElementById("dashNewRoast");
       const val = inp.value.trim();
       if (!val) return;
-      const updated = [...(currentState.customRoasts || []), val];
+      document.getElementById("subtitlePreview").textContent = `"${val}"`;
       inp.value = "";
-      persistSettings({ customRoasts: updated });
+      persistSettings({ customRoasts: [...(currentState.customRoasts || []), val] });
     });
 
     window.deleteRoast = (idx) => {
@@ -380,73 +544,68 @@
         await sendToExtension({ type: "START_LOCKIN", durationMinutes: mins });
         syncFromExtension();
       } else {
-        alert(`Demo Mode: Connect your Extension ID at the top to remotely lock your browser for ${mins} mins!`);
+        alert(`Demo Mode: Paste your Extension ID at the top and click Sync to remotely lock your browser for ${mins} mins!`);
       }
     };
 
     window.stopRemoteLock = async () => {
-      if (isConnected) {
-        await sendToExtension({ type: "STOP_LOCKIN" });
-        syncFromExtension();
-      }
+      if (isConnected) { await sendToExtension({ type: "STOP_LOCKIN" }); syncFromExtension(); }
     };
 
+    // Export Cinematic PNG Card
     document.getElementById("downloadCardBtn").addEventListener("click", () => {
       const canvas = document.createElement("canvas");
-      canvas.width = 880;
+      canvas.width = 900;
       canvas.height = 480;
       const ctx = canvas.getContext("2d");
 
-      const grad = ctx.createLinearGradient(0, 0, 880, 480);
-      grad.addColorStop(0, "#1e123b");
-      grad.addColorStop(0.6, "#110b24");
-      grad.addColorStop(1, "#0a1f1c");
+      const grad = ctx.createLinearGradient(0, 0, 900, 480);
+      grad.addColorStop(0, "#190b18");
+      grad.addColorStop(0.5, "#090812");
+      grad.addColorStop(1, "#061a14");
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 880, 480);
+      ctx.fillRect(0, 0, 900, 480);
 
-      ctx.strokeStyle = "#8b5cf6";
+      ctx.strokeStyle = "#ff2a5f";
       ctx.lineWidth = 4;
-      ctx.strokeRect(16, 16, 848, 448);
+      ctx.strokeRect(18, 18, 864, 444);
 
-      ctx.fillStyle = "#c4b5fd";
-      ctx.font = "bold 20px sans-serif";
-      ctx.fillText("🚫 GUILT TRIP BLOCKER • FOCUS REPORT", 48, 68);
+      ctx.fillStyle = "#ff2a5f";
+      ctx.font = "bold 20px monospace";
+      ctx.fillText("🎬 GUILT TRIP BLOCKER // CASE #GTB-2026", 48, 68);
 
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "bold 18px sans-serif";
+      ctx.fillStyle = "#8b92a5";
+      ctx.font = "bold 16px monospace";
       ctx.textAlign = "center";
-      ctx.fillText("FOCUS DISCIPLINE SCORE", 440, 145);
+      ctx.fillText("SELF-CONTROL DISCIPLINE RATING", 450, 145);
 
-      ctx.fillStyle = "#10b981";
-      ctx.font = "900 92px sans-serif";
-      ctx.fillText(document.getElementById("cardFocusScore").textContent, 440, 240);
+      ctx.fillStyle = "#00e599";
+      ctx.font = "bold 96px sans-serif";
+      ctx.fillText(document.getElementById("cardFocusScore").textContent, 450, 245);
 
       const cols = [
         { label: "TIME SAVED", val: document.getElementById("cardTimeSaved").textContent, x: 200 },
-        { label: "IMPULSES RESISTED", val: document.getElementById("cardResisted").textContent, x: 440 },
-        { label: "STREAK", val: document.getElementById("cardStreak").textContent, x: 680 }
+        { label: "TRAPS DODGED", val: document.getElementById("cardResisted").textContent, x: 450 },
+        { label: "STREAK", val: document.getElementById("cardStreak").textContent, x: 700 }
       ];
 
       cols.forEach((c) => {
-        ctx.fillStyle = "#94a3b8";
-        ctx.font = "bold 16px sans-serif";
-        ctx.fillText(c.label, c.x, 345);
+        ctx.fillStyle = "#8b92a5";
+        ctx.font = "bold 15px monospace";
+        ctx.fillText(c.label, c.x, 350);
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 32px sans-serif";
-        ctx.fillText(c.val, c.x, 390);
+        ctx.fillText(c.val, c.x, 395);
       });
 
       const link = document.createElement("a");
-      link.download = "guilt-trip-focus-card.png";
+      link.download = "guilt-trip-case-file.png";
       link.href = canvas.toDataURL("image/png");
       link.click();
     });
 
-    if (extensionId) {
-      syncFromExtension();
-    } else {
-      renderDashboard();
-    }
+    if (extensionId) syncFromExtension();
+    else renderDashboard();
   </script>
 </body>
 </html>
