@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Guilt Trip Blocker",
-  "version": "3.0",
-  "description": "Blocks distracting sites with Savage Tanglish guilt trips, Earn-Your-Scroll CS challenges, YouTube Shorts filter, and a live Focus Dashboard.",
+  "version": "3.1",
+  "description": "Blocks distracting sites with Kollywood comedian GIFs, Tanglish roasts, Earn-Your-Scroll CS quiz, and Live Focus Dashboard.",
   "permissions": [
     "storage",
     "declarativeNetRequest",
@@ -20,6 +20,16 @@
       "https://*.vercel.app/*"
     ]
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://guilt-trip-blocker-dashboard.vercel.app/*",
+        "http://localhost:*/*"
+      ],
+      "js": ["bridge.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   },

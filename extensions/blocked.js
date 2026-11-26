@@ -1,25 +1,40 @@
-const ROASTS_SAVAGE = [
-  { emoji: "🫵", text: "Dei. Padikka mudiyala nu illa. Nee padikka virumbala. Difference purinjiko." },
-  { emoji: "▶️", text: "YouTube-la oru video paakalam nu vandha? Unakku theriyum adhu oru video-la stop aagadhu." },
-  { emoji: "💀", text: "\"One video only\" nu sonna nee dhaana? History-ku un character vera story solludhu." },
-  { emoji: "😂", text: "Study video thedi vandhu, recommendation-la 17 videos later... enna da research?" },
-  { emoji: "📱", text: "Social media open panna 0.2 seconds. Problem solve panna loading screen. Semma priorities." },
-  { emoji: "🫠", text: "Nee tired illa da. Distracted. Rendu perukkum difference irukku." },
-  { emoji: "🤡", text: "Un dream list aesthetic ah irukku. Aana un actual daily progress enga da?" },
-  { emoji: "⏳", text: "Time unakku wait panna maatadhu. Nee dhaan time-a waste pannitu irukka." },
-  { emoji: "🔥", text: "Recommendation feed build panna poriya? Illa future career build panna poriya?" }
-];
-
-const ROASTS_HARDCORE = [
-  { emoji: "🪓", text: "Bro, un competitors ippo padichitu irukaanga. Nee inga reel scroll pannitu irukka. All the best." },
-  { emoji: "☠️", text: "Placement interview-la poi \"Guilt trip blocker quote semmaya irundhuchu\" nu dhaan solla poriya?" },
-  { emoji: "📉", text: "Zero self-control. Zero discipline. Future-la question paper paathu azha ready-aa?" }
-];
-
-const ROASTS_GENTLE = [
-  { emoji: "🌱", text: "Take a deep breath. A small step right now is better than scrolling for an hour." },
-  { emoji: "🎯", text: "Remember why you started. Focus on just 25 minutes of honest work." },
-  { emoji: "✨", text: "Progress is made one focused session at a time. You've got this!" }
+const KOLLYWOOD_ROASTS = [
+  {
+    actor: "🎭 Vadivelu • Shock",
+    gif: "https://media.tenor.com/726tO49dM_IAAAAM/vadivelu-shocked.gif",
+    emoji: "😱",
+    text: "\"Aahaan! Padikkanum nu laptop open pannitu, Instagram-la enna da aaraichi?\""
+  },
+  {
+    actor: "🎭 Vadivelu • Enna Koduma",
+    gif: "https://media.tenor.com/1s22-L6B5M0AAAAM/vadivelu-comedy.gif",
+    emoji: "🤦‍♂️",
+    text: "\"Enna koduma sir idhu! 'One reel only' nu solli 45 mins-aa scroll pannitu irukka!\""
+  },
+  {
+    actor: "🎭 Santhanam • Counter",
+    gif: "https://media.tenor.com/k9r1R52x3g4AAAAM/santhanam-tamil.gif",
+    emoji: "😏",
+    text: "\"Un dream company Google-ah? Illa YouTube Shorts watch history-la world record-ah?\""
+  },
+  {
+    actor: "🔥 Superstar Rajini • Warning",
+    gif: "https://media.tenor.com/4n_r4p7P56EAAAAM/rajinikanth-cool.gif",
+    emoji: "🕶️",
+    text: "\"Kanna, oru thadava distract aana nooru thadava regret pannuva. Close the tab!\""
+  },
+  {
+    actor: "🔥 Thalapathy Vijay • Focus",
+    gif: "https://media.tenor.com/2Q8R8Y4a3e4AAAAM/vijay-thalapathy.gif",
+    emoji: "⚡",
+    text: "\"All is well nu sollitu syllabus-a mudikama reel paatha placement varadhu bro!\""
+  },
+  {
+    actor: "🎭 Goundamani • Reality Check",
+    gif: "https://media.tenor.com/o5H3kS4n_2wAAAAM/goundamani-tamil.gif",
+    emoji: "🙄",
+    text: "\"Arasiyal-la idhellam saadharanamappa... aana exam hall-la indha reels kaapathadhu!\""
+  }
 ];
 
 const PENALTY_SENTENCES = [
@@ -29,31 +44,10 @@ const PENALTY_SENTENCES = [
 ];
 
 const CS_QUIZ_BANK = [
-  {
-    q: "What is the worst-case time complexity of QuickSort?",
-    options: ["O(n log n)", "O(n²)", "O(n)", "O(log n)"],
-    ans: 1
-  },
-  {
-    q: "Which data structure is used for Breadth-First Search (BFS) in a graph?",
-    options: ["Stack", "Priority Queue", "Queue", "Disjoint Set"],
-    ans: 2
-  },
-  {
-    q: "In Java, which collection guarantees O(1) average lookup and preserves insertion order?",
-    options: ["HashMap", "TreeMap", "LinkedHashMap", "ConcurrentHashMap"],
-    ans: 2
-  },
-  {
-    q: "Which SQL isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    options: ["Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable"],
-    ans: 2
-  },
-  {
-    q: "What is the time complexity of finding the lowest common ancestor in a balanced BST of N nodes?",
-    options: ["O(1)", "O(log N)", "O(N)", "O(N log N)"],
-    ans: 1
-  }
+  { q: "What is the worst-case time complexity of QuickSort?", options: ["O(n log n)", "O(n²)", "O(n)", "O(log n)"], ans: 1 },
+  { q: "Which data structure is used for Breadth-First Search (BFS)?", options: ["Stack", "Priority Queue", "Queue", "Disjoint Set"], ans: 2 },
+  { q: "In Java, which map guarantees O(1) lookup and preserves insertion order?", options: ["HashMap", "TreeMap", "LinkedHashMap", "ConcurrentHashMap"], ans: 2 },
+  { q: "Which SQL isolation level prevents dirty & non-repeatable reads but allows phantom reads?", options: ["Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable"], ans: 2 }
 ];
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -67,7 +61,7 @@ function playBlockSound() {
     osc.type = "sawtooth";
     osc.frequency.setValueAtTime(320, audioCtx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.35);
-    gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.16, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -77,29 +71,28 @@ function playBlockSound() {
 }
 
 async function loadRoast() {
-  const data = await chrome.storage.local.get(["roastLevel", "customRoasts", "soundEnabled"]);
+  const data = await chrome.storage.local.get(["customRoasts", "soundEnabled"]);
   if (data.soundEnabled !== false) playBlockSound();
 
-  const level = data.roastLevel || "savage";
-  let pool = [...ROASTS_SAVAGE];
-  if (level === "gentle") {
-    pool = [...ROASTS_GENTLE];
-    document.getElementById("levelBadge").textContent = "🌱 Gentle Reminder";
-  } else if (level === "hardcore") {
-    pool = [...ROASTS_HARDCORE, ...ROASTS_SAVAGE];
-    document.getElementById("levelBadge").textContent = "🪓 Hardcore Brutal";
-  } else {
-    document.getElementById("levelBadge").textContent = "⚡ Tanglish Savage";
-  }
-
+  let pool = [...KOLLYWOOD_ROASTS];
   if (Array.isArray(data.customRoasts)) {
-    data.customRoasts.forEach((r) => pool.push({ emoji: "👀", text: r }));
+    data.customRoasts.forEach((r) => {
+      pool.push({
+        actor: "🎬 Custom Kollywood Roast",
+        gif: KOLLYWOOD_ROASTS[Math.floor(Math.random() * KOLLYWOOD_ROASTS.length)].gif,
+        emoji: "🔥",
+        text: `"${r}"`
+      });
+    });
   }
 
-  const random = pool[Math.floor(Math.random() * pool.length)];
-  document.getElementById("emojiBox").textContent = random.emoji;
-  document.getElementById("roastText").textContent = random.text;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  document.getElementById("actorBadge").textContent = pick.actor;
+  document.getElementById("roastText").textContent = pick.text;
   document.getElementById("siteBadge").textContent = `🚫 Blocked: ${blockedSite}`;
+
+  const stage = document.getElementById("gifStage");
+  stage.innerHTML = `<img src="${pick.gif}" alt="${pick.actor}" onerror="this.parentElement.innerHTML='<div class=\\'gif-fallback\\'>${pick.emoji}<span style=\\'font-size:12px;color:#94a3b8;margin-top:8px;\\'>${pick.actor}</span></div>'" />`;
 }
 
 async function updateStatsUI() {
@@ -118,11 +111,8 @@ async function updateStatsUI() {
 }
 
 function redirectAfterBypass() {
-  if (blockedSite && blockedSite !== "Distraction") {
-    window.location.href = `https://${blockedSite}`;
-  } else {
-    window.history.back();
-  }
+  if (blockedSite && blockedSite !== "Distraction") window.location.href = `https://${blockedSite}`;
+  else window.history.back();
 }
 
 document.getElementById("rerollRoastBtn").addEventListener("click", loadRoast);
@@ -152,7 +142,7 @@ document.getElementById("earnScrollBtn").addEventListener("click", () => {
           redirectAfterBypass();
         });
       } else {
-        document.getElementById("quizFeedback").textContent = "❌ Wrong answer! Try another question or go back to studying.";
+        document.getElementById("quizFeedback").textContent = "❌ Wrong answer! Try again or go back to studying.";
       }
     });
     optsDiv.appendChild(btn);
@@ -184,9 +174,8 @@ document.getElementById("giveUpLink").addEventListener("click", () => {
   cooldownTimerEl.textContent = `⏳ Mandatory cool-off: ${cooldownSeconds}s remaining`;
   cooldownInterval = setInterval(() => {
     cooldownSeconds--;
-    if (cooldownSeconds > 0) {
-      cooldownTimerEl.textContent = `⏳ Mandatory cool-off: ${cooldownSeconds}s remaining`;
-    } else {
+    if (cooldownSeconds > 0) cooldownTimerEl.textContent = `⏳ Mandatory cool-off: ${cooldownSeconds}s remaining`;
+    else {
       clearInterval(cooldownInterval);
       cooldownTimerEl.textContent = "⏱️ Timer complete. Finish typing!";
       checkPenalty();
@@ -202,13 +191,8 @@ document.getElementById("cancelBypassBtn").addEventListener("click", () => {
 penaltyInputEl.addEventListener("input", checkPenalty);
 function checkPenalty() {
   const match = penaltyInputEl.value.trim().toLowerCase() === currentPenalty.trim().toLowerCase();
-  if (match && cooldownSeconds <= 0) {
-    confirmBypassBtn.disabled = false;
-    confirmBypassBtn.style.opacity = "1";
-  } else {
-    confirmBypassBtn.disabled = true;
-    confirmBypassBtn.style.opacity = "0.4";
-  }
+  confirmBypassBtn.disabled = !(match && cooldownSeconds <= 0);
+  confirmBypassBtn.style.opacity = confirmBypassBtn.disabled ? "0.4" : "1";
 }
 
 confirmBypassBtn.addEventListener("click", () => {
