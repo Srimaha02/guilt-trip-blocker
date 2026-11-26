@@ -174,42 +174,45 @@ async function redirectActiveBlockedTabs(blockedWebsites, shouldBlock, shouldBlo
   } catch (e) {}
 }
 
-async function applyDnrRules(blockedWebsites, shouldBlock, shouldBlockShorts) {
-  try {
-    const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
-    const oldRuleIds = existingRules.map((r) => r.id);
-    if (oldRuleIds.length > 0) {
-      await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: oldRuleIds });
-    }
+let dnrQueue = Promise.resolve();
 
-    const newRules = [];
-    if (shouldBlockShorts) {
-      newRules.push({
-        id: 999,
-        priority: 2,
-        action: { type: "redirect", redirect: { extensionPath: "/blocked.html?site=youtube.com%2Fshorts" } },
-        condition: { urlFilter: "||youtube.com/shorts", resourceTypes: ["main_frame"] }
-      });
-    }
+function applyDnrRules(blockedWebsites, shouldBlock, shouldBlockShorts) {
+  dnrQueue = dnrQueue.then(async () => {
+    try {
+      const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
+      const oldRuleIds = existingRules.map((r) => r.id);
 
-    if (shouldBlock && blockedWebsites?.length > 0) {
-      blockedWebsites.forEach((site, index) => {
-        const cleanSite = site.trim().toLowerCase();
+      const newRules = [];
+      if (shouldBlockShorts) {
         newRules.push({
-          id: 1000 + index,
-          priority: 1,
-          action: { type: "redirect", redirect: { extensionPath: `/blocked.html?site=${encodeURIComponent(cleanSite)}` } },
-          condition: { urlFilter: `||${cleanSite}`, resourceTypes: ["main_frame"] }
+          id: 999,
+          priority: 2,
+          action: { type: "redirect", redirect: { extensionPath: "/blocked.html?site=youtube.com%2Fshorts" } },
+          condition: { urlFilter: "||youtube.com/shorts", resourceTypes: ["main_frame"] }
         });
-      });
-    }
+      }
 
-    if (newRules.length > 0) {
-      await chrome.declarativeNetRequest.updateDynamicRules({ addRules: newRules });
+      if (shouldBlock && blockedWebsites?.length > 0) {
+        const uniqueSites = Array.from(new Set(blockedWebsites.map((s) => s.trim().toLowerCase()).filter(Boolean)));
+        uniqueSites.forEach((cleanSite, index) => {
+          newRules.push({
+            id: 1000 + index,
+            priority: 1,
+            action: { type: "redirect", redirect: { extensionPath: `/blocked.html?site=${encodeURIComponent(cleanSite)}` } },
+            condition: { urlFilter: `||${cleanSite}`, resourceTypes: ["main_frame"] }
+          });
+        });
+      }
+
+      await chrome.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: oldRuleIds,
+        addRules: newRules
+      });
+    } catch (err) {
+      console.error("DNR sync error:", err);
     }
-  } catch (err) {
-    console.error("DNR error:", err);
-  }
+  });
+  return dnrQueue;
 }
 
 function updateExtensionBadge({ isBypassed, tempBypassUntil, isLockInActive, lockInEndsAt, shouldBlock }) {
